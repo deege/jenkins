@@ -1,4 +1,6 @@
-# RUNAS docker run -it -d --name jenkins -p 8080:8080 -p 50000:50000 -v /var/jenkins_home deege/jenkins
+# RUNAS docker run -it -d --name jenkins -p 8080:8080 -p 50000:50000 -v /var/jenkins deege/jenkins
+# RUNAS docker run -it -d --name jenkins --volumes-from jenkins-data -p 8080:8080 -p 50000:50000 deege/jenkins
+# BUILDAS docker build -t jenkins .
 
 FROM t0nyhays/java8base
 
@@ -33,11 +35,10 @@ ENV GROOVY_HOME /opt/groovy/
 ENV PATH $GROOVY_HOME/bin:$PATH
 
 # install Jenkins
-RUN useradd -d /home/jenkins -m -s /bin/bash jenkins
+RUN useradd -d /var/jenkins -m -s /bin/bash jenkins
 ADD http://mirrors.jenkins-ci.org/war/${JENKINS_VERSION}/jenkins.war /opt/jenkins.war
 RUN chmod 644 /opt/jenkins.war
-ENV JENKINS_HOME /jenkins
-VOLUME /var/jenkins_home
+ENV JENKINS_HOME /var/jenkins
 
 # for main web interface:
 EXPOSE 8080
